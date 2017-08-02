@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>BZS-Notifier</title>
+    <link rel="stylesheet" href="css/main.css"></link>
+  </head>
+  <body>
+    <h1>BZS-Notifier</h1>
+    <hr />
+    
+    <button id="testButton">Test</button>
+    
+    <!-- All of the Node.js APIs are available in this renderer process. -->
+
+
+    <!-- Debug info for the footer -->
+    <ul id="debug-list">
+        <li>Node.js: <script>document.write(process.versions.node)</script></li>
+        <li>Chromium: <script>document.write(process.versions.chrome)</script></li>
+        <li>Electron: <script>document.write(process.versions.electron)</script></li>
+    </ul>
+  </body>
+
+  <script>
+    // You can also require other files to run in this process
+    require('./renderer.js')
+  </script>
+</html>

@@ -1,0 +1,22 @@
+{
+  "name": "BZS-Notifier",
+  "version": "0.0.1",
+  "description": "A simple notifier for maintainers of the MN-DHS BlueZone Scripts project.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": "https://github.com/MN-Script-Team/BZS-Notifier",
+  "keywords": [
+    "Electron",
+    "quick",
+    "start",
+    "tutorial",
+    "demo"
+  ],
+  "author": "theVKC",
+  "license": "CC0-1.0",
+  "devDependencies": {
+    "electron": "~1.6.2"
+  }
+}
