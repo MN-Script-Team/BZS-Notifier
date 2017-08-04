@@ -1,31 +1,73 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta charset="UTF-8">
     <title>BZS-Notifier</title>
+    
+    <!-- Custom css used in this project -->
     <link rel="stylesheet" href="css/main.css"></link>
+    
+    <!-- Bootstrap CSS, JavaScript (imported below), and theme v3.3.7, licensed under MIT, https://github.com/twbs/bootstrap/blob/master/LICENSE -->
+    <link rel="stylesheet" href="css/bootstrap.min.css"></link>
+    <link rel="stylesheet" href="css/bootstrap-theme.min.css"></link>
+    
+    <script>
+      // Version number... NOTE: this is separate from package.json as importing package.json
+      // into the app is not recommended! Update both places!
+      const packageVersion = "v0.0.1";
+    
+    </script>
+    
   </head>
   <body>
-    <h1>BZS-Notifier</h1>
-    <hr />
     
-    <!-- This part asks for a token -->
-    <input type="text" id="queryTokenInput"/>
-    <button id="testButton">Test</button>
+    <div class="container-fluid">
+      
+      <div class="row vertical-align" id="headerSection">
+        <div class="col-xs-3" id="headerImage">
+          <img class="img-responsive" src="icon-default-256.png"/>
+        </div>
+        <div class="col-xs-9" id="headerText">
+          <h1>BZS-Notifier</h1>
+          <p>A simple utility to display changes in the BlueZone Scripts project</p>
+        </div>
+      </div>
+      
+      <form>
+        <!-- This part asks for a GitHub token -->
+        <div class="form-group">
+          <label for="queryTokenInput">Provide your API key from GitHub.com:</label>
+          <input type="text" class="form-control" id="queryTokenInput"/>
+        </div>
+      </form>
     
-    <!-- All of the Node.js APIs are available in this renderer process. -->
+      <button class="btn btn-default" id="testButton">Test</button> <!-- Needs to be moved to the form which requires jQuery changes -->
+        
+      <!-- Debug info for the footer -->
+      <div class="row" id="debug-div">
+        <ul id="debug-list">
+          <li><strong>Debug info</strong></li>
+          <li>App version: <script>document.write( packageVersion )</script></li>
+          <li>Node.js: <script>document.write(process.versions.node)</script></li>
+          <li>Chromium: <script>document.write(process.versions.chrome)</script></li>
+          <li>Electron: <script>document.write(process.versions.electron)</script></li>
+        </ul>  
+      </div>
+    
+    </div> <!-- container-fluid end -->
 
-
-    <!-- Debug info for the footer -->
-    <ul id="debug-list">
-        <li>Node.js: <script>document.write(process.versions.node)</script></li>
-        <li>Chromium: <script>document.write(process.versions.chrome)</script></li>
-        <li>Electron: <script>document.write(process.versions.electron)</script></li>
-    </ul>
   </body>
 
+
+  <!-- Idea for jQuery import modifed from snippet found at https://stackoverflow.com/questions/32621988/electron-jquery-is-not-defined -->
+  <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>  <!-- Insert this line above script imports  -->
+  <script src="js/jquery-3.2.1.min.js"></script> <!-- jQuery v3.2.1, licensed under MIT, https://jquery.org/license/ -->
+  <script src="js/bootstrap.min.js"></script> <!-- Bootstrap js, see above for details and license -->
+  <script>if (window.module) module = window.module;</script>  <!-- Insert this line after script imports -->
+
+
+  <!-- All of the Node.js APIs are available in this renderer process. -->
   <script>
-    // You can also require other files to run in this process
-    require('./renderer.js')
+    require('./renderer.js')     // You can also require other files to run in this process
   </script>
 </html>
