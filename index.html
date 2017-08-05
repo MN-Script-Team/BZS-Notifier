@@ -33,15 +33,37 @@
         </div>
       </div>
       
-      <form>
-        <!-- This part asks for a GitHub token -->
-        <div class="form-group">
-          <label for="queryTokenInput">Provide your API key from GitHub.com:</label>
-          <input type="text" class="form-control" id="queryTokenInput"/>
+      <!-- Automatically gets filled in by authentication process -->
+      <span id="alertZone">
+        
+      </span>
+      
+      <!-- This part asks for a GitHub token -->
+      <div class="row">
+        <div class="col-xs-12">  
+          <form id="submitAPIForm">
+            <label for="queryTokenInput">Provide <a href="https://github.com/settings/tokens/">your token</a> from GitHub.com:</label>
+            <div class="input-group">
+              <input type="text" class="form-control" id="queryTokenInput" placeholder="What am I?" />
+              <span class="input-group-btn">
+                <button class="btn btn-primary" type="button" id="sendToken">Send</button>
+              </span>
+            </div>
+          </form>
         </div>
-      </form>
+      </div>
+      
+      <!-- TODO NEXT!!!!!! DISPLAY THE CHANGES SOMEHOW!!!! -->
+      <hr />        
+      <button class="btn btn-default" type="button" id="checkChanges">Check total in policy column</button>        
+      <p id="totalTest"></p>
+          
+
+              
     
-      <button class="btn btn-default" id="testButton">Test</button> <!-- Needs to be moved to the form which requires jQuery changes -->
+      
+
+      
         
       <!-- Debug info for the footer -->
       <div class="row" id="debug-div">

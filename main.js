@@ -6,6 +6,7 @@ const {app, Tray, Menu, shell, BrowserWindow} = require('electron');
 // Defining a path and a URL
 const path = require('path')
 const url = require('url')
+const Store = require('./js/store.js');
 
 // Sets up the icons for the taskbar and main app
 const trayIconPath = path.join(__dirname, 'icon-default-16.png');
@@ -15,14 +16,38 @@ const appIconPath = path.join(__dirname, 'icon-default-256.png');
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
 
+// Instantiate the class for setting window defaults
+const store = new Store({
+  // We'll call our data file 'user-preferences'
+  configName: 'user-preferences',
+  defaults: {
+    // 400x600 is the default size of our window
+    windowBounds: { width: 400, height: 600 },
+  }
+});
+
 // This function creates the browser window which we'll use for main setup on starting
 function createWindow () {
   // Create the browser window.
+  
+  // First we'll get our height and width. This will be the defaults if there wasn't anything saved
+  let { width, height } = store.get('windowBounds');
+  
   mainWindow = new BrowserWindow({
-    width: 400, 
-    height: 600,
+    width,
+    height,
     icon: appIconPath
   })
+  
+  // The BrowserWindow class extends the node.js core EventEmitter class, so we use that API
+  // to listen to events on the BrowserWindow. The resize event is emitted when the window size changes.
+  mainWindow.on('resize', () => {
+    // The event doesn't pass us the window size, so we call the `getBounds` method which returns an object with
+    // the height, width, and x and y coordinates.
+    let { width, height } = mainWindow.getBounds();
+    // Now that we have them, save them using the `set` method.
+    store.set('windowBounds', { width, height });
+  });
 
   // and load the index.html of the app.
   mainWindow.loadURL(url.format({
@@ -30,7 +55,7 @@ function createWindow () {
     protocol: 'file:',
     slashes: true
   }))
-
+  
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
     // Dereference the window object, usually you would store windows

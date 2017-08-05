@@ -47,3 +47,9 @@
   display: flex;
   align-items: center;
 }
+
+#avatarGitHub {
+  height: 40px;
+  display: inline;
+  margin: -10px 5px -10px -5px;
+}
