@@ -32,9 +32,11 @@ var objKeyFS = new FS_storage_connection({
 	}
 });
 
+// This variable contains the GitHub Key used by multiple functions
 var globalGitHubKey = null;
 
-
+// This variable defines whether-or-not a valid key is entered, defaults to false
+var validGitHubKey = false;
 
 
 
@@ -55,10 +57,7 @@ var globalGitHubKey = null;
 
 function getGitHubChanges() {
 	
-	function addColumnTotals(id) {
-		
-		//badgeIDVariable = "#badge" + id;
-		
+	function addColumnTotals(id) {		
 		objGitHub.projects.getProjectCards({
 			column_id: id
 		}, function(err, res) {
@@ -95,15 +94,20 @@ function getGitHubChanges() {
 	  // Log the JSON string for debugging purposes
 	  console.log("getProjectColumns: " + JSON.stringify(res));
 	  
+	  // Clear out the existing list before iterating again
+	  $("#changesList").html("");
+	  
 			// Now we go through each column (res.data reads this as an array), and update the display!
 			for (var x in res.data) {
 				if (res.data.hasOwnProperty(x)) {
 					console.log(JSON.stringify(res.data[x]));					// Log the JSON string for debugging purposes
 					// var badgeTotal = getGitHubProjectCards(res.data[x].id);
+
 					$("#changesList").append(
 						addColumnsToList(res.data[x].id, res.data[x].name)
 					);
 					
+					// Collects/displays the total cards
 					addColumnTotals(res.data[x].id);
 					console.log(res.data[x].id);                 				// Grabs the cards from each column and collects/displays the column title and total cards
 					console.log(res.data[x].name);
@@ -131,11 +135,6 @@ function validateGitHubKey() {
 		, token: globalGitHubKey
 	});
   
-	// Get rate limit, may use in the future to warn users who are too close
-	objGitHub.misc.getRateLimit({}, function(err, res) {
-		console.log(res.data.resources.core.remaining);
-	});
-  
 	// Get and display user details from GitHub
 	objGitHub.users.get({}, function(err, res) {
 
@@ -149,9 +148,9 @@ function validateGitHubKey() {
 				+ "</div>"
 			);
 
-			// Log any errors and then exit the function
-			console.log(err);
-			return;
+			// Defines the GitHub Key as invalid, then exits the function
+			return validGitHubKey = false;
+		//	return;
 		};
 		
 		// Creates a signed-in alert
@@ -164,10 +163,16 @@ function validateGitHubKey() {
 			+ "</div>"
 		);
 
-		console.log("validateGitHubKey: " + JSON.stringify(res));					// Sends string to console for debugging
-
-		// Runs the update function
 		
+		// Get rate limit, may use in the future to warn users who are too close
+		objGitHub.misc.getRateLimit({}, function(err, res) {
+			console.log(res.data.resources.core.remaining);
+		});
+		
+		
+		getGitHubChanges();														// Initial check now that we're authenticated
+		setInterval(function(){getGitHubChanges(); }, 600000);					// Check GitHub for content of project columns every 10 minutes (10 * 60 * 1000)
+		return validGitHubKey = true;											// Defines the GitHub Key as valid
 	});
   
 }
@@ -223,12 +228,11 @@ function notificationTest() {
 
 $(document).ready(function() {
 	
-	// Grabs the GitHub key from the JSON file on load
+	// Grabs the GitHub key from the JSON file on load, and validates it
 	$(document).ready(function() {
 		globalGitHubKey = objKeyFS.get('githubKey');							// Set the variable from the JSON
 		$("#queryTokenInput").val(globalGitHubKey);								// Display the key in the input
 		validateGitHubKey();													// Validate via GitHub
-		getGitHubChanges();														// Check GitHub for content of project columns
 	});
 	
 	// Listening for the click to send the API token for authentication
@@ -236,7 +240,7 @@ $(document).ready(function() {
 		globalGitHubKey = $("#queryTokenInput").val();							// Grab value from input
 		objKeyFS.set('githubKey', globalGitHubKey);								// Write the variable to the JSON
 		validateGitHubKey();													// Validate via GitHub
-		getGitHubChanges();														// Check GitHub for content of project columns
+	//	if (validGitHubKey) {};								
 	});
 	
 	// Force external links to load in default browser
@@ -246,3 +250,13 @@ $(document).ready(function() {
 	});
 	
 });
+
+
+// ---------------------------------------------------------------------------- LOOPING TO RECHECK API FOR CHANGES
+
+
+// 
+
+
+//	validateGitHubKey();
+//	if (validGitHubKey) {getGitHubChanges();};								// Check GitHub for content of project columns
