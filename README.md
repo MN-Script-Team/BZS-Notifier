@@ -11,6 +11,7 @@ Primary development by Veronica Cary, of the Minnesota Department of Human Servi
 Some open source work was used in this open source project (presented in alphabetical order with licenses linked):
 
 * [Bootstrap](https://getbootstrap.com), which provides a responsive design framework, is licensed under the [MIT license](https://github.com/twbs/bootstrap/blob/master/LICENSE). 
+* [Carlito](https://fontlibrary.org/en/font/carlito), a font (which is metrically-compatible with the non-free font suggested by the State of Minnesota Style Guide) was designed by [Łukasz Dziedzic](http://lukaszdziedzic.eu/) and licensed under the [SIL Open Font License](http://scripts.sil.org/OFL).
 * [Chromium](https://chromium.org/Home), which is an open source browser utilized by Electron to display the app, is licensed under [a permissive license from Google](https://github.com/electron/electron/blob/master/chromium_src/LICENSE.chromium).
 * [Electron](https://github.com/electron/electron), which allows a web application to be packaged for a desktop, is licensed under the [MIT license](https://github.com/electron/electron/blob/master/LICENSE).
 * [jQuery](https://jquery.com/), which simplifies rendering text and details in the application, is licensed under the [MIT license](https://jquery.org/license). 

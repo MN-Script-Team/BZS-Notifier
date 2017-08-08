@@ -239,8 +239,7 @@ $(document).ready(function() {
 	$("#sendToken").on("click", function() {
 		globalGitHubKey = $("#queryTokenInput").val();							// Grab value from input
 		objKeyFS.set('githubKey', globalGitHubKey);								// Write the variable to the JSON
-		validateGitHubKey();													// Validate via GitHub
-	//	if (validGitHubKey) {};								
+		validateGitHubKey();													// Validate via GitHub						
 	});
 	
 	// Force external links to load in default browser
