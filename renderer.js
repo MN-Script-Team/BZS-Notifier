@@ -42,21 +42,10 @@ var validGitHubKey = false;
 
 // ---------------------------------------------------------------------------- DEFINING FUNCTIONS
 
-
-// This function reads all cards in a column and updates the display with a list-group. 
-// It takes columnID as a parameter which is passed from other calls to the GitHub API.
-
-
-
-
-
-
-
-
-
-
+// This gets changes from GitHub
 function getGitHubChanges() {
 	
+	// This function reads all cards in a column and updates the list-item's badge 
 	function addColumnTotals(id) {		
 		objGitHub.projects.getProjectCards({
 			column_id: id
@@ -65,66 +54,57 @@ function getGitHubChanges() {
 		});
 	};
 
-
+	// This function reads all of the columns in a project and adds it to the list
 	function addColumnsToList(id, name) {
-		return "<button class='list-group-item' id='col" + id + "'>" 
-			+ "\n\t<span class='badge' id='badge" + id + "'></span>"
-			+ "\n\t" + name
-		+ "</button>";
+		$("#changesList").append(
+			"<button class='list-group-item' id='col" + id + "'>" 
+				+ "\n\t<span class='badge' id='badge" + id + "'></span>"
+				+ "\n\t" + name
+			+ "</button>"
+		);
 	};
   
-  // Now lets get the data. First we get repo projects, then the specific project 
-  // details, then the columns, then the cards. 
-  objGitHub.projects.getRepoProjects({
-	owner: "MN-Script-Team",
-	repo: "DHS-PRISM-Scripts"
-  }, function(err, res) {
-	
-	// Log the JSON string for debugging purposes
-	console.log("getRepoProjects: " + JSON.stringify(res));
-	
-	// Grab the ID from the first project!
-	var projectID = res.data[0].id; 
-	
-	// Now we need to go through the project and grab info from each column!
-	objGitHub.projects.getProjectColumns({
-	  project_id: projectID
+	// Now lets get the data. First we get repo projects, then the specific project 
+	// details, then the columns, then the cards. 
+	objGitHub.projects.getRepoProjects({
+		owner: "MN-Script-Team",
+		repo: "DHS-PRISM-Scripts"
 	}, function(err, res) {
+	
+		// Log the JSON string for debugging purposes
+		console.log("getRepoProjects: " + JSON.stringify(res));
+	
+		// Grab the ID from the first project!
+		var projectID = res.data[0].id; 
+	
+		// Now we need to go through the project and grab info from each column!
+		objGitHub.projects.getProjectColumns({
+			project_id: projectID
+		}, function(err, res) {
 	  
-	  // Log the JSON string for debugging purposes
-	  console.log("getProjectColumns: " + JSON.stringify(res));
+			// Log the JSON string for debugging purposes
+			console.log("getProjectColumns: " + JSON.stringify(res));
 	  
-	  // Clear out the existing list before iterating again
-	  $("#changesList").html("");
+			// Clear out any existing list items adds a refresh button to the top
+			$("#changesList").html(
+				"<button class='list-group-item active' id='refreshChanges'>"
+					+ "\n\tRefresh this list!"
+				+ "\n </button>"
+			);
+			
+			$("#refreshChanges").on("click", function() {validateGitHubKey();});// Listening for the click to send the API token for authentication
 	  
 			// Now we go through each column (res.data reads this as an array), and update the display!
 			for (var x in res.data) {
 				if (res.data.hasOwnProperty(x)) {
 					console.log(JSON.stringify(res.data[x]));					// Log the JSON string for debugging purposes
-					// var badgeTotal = getGitHubProjectCards(res.data[x].id);
-
-					$("#changesList").append(
-						addColumnsToList(res.data[x].id, res.data[x].name)
-					);
-					
-					// Collects/displays the total cards
-					addColumnTotals(res.data[x].id);
-					console.log(res.data[x].id);                 				// Grabs the cards from each column and collects/displays the column title and total cards
-					console.log(res.data[x].name);
-					// Grabs the cards from each column and collects/displays the column title and total cards
-					// alert(getGitHubProjectCards(res.data[x].id));
+					addColumnsToList(res.data[x].id, res.data[x].name)			// Add these columns to the list
+					addColumnTotals(res.data[x].id);							// Collects/displays the total cards in that column
 				};
 			};
 		});    
 	});
 };
-
-
-
-
-
-
-
 
 // This checks the GitHub key entered and sees if it's accurate. If it works it'll update the UI and then check for updates
 function validateGitHubKey() {
@@ -235,12 +215,15 @@ $(document).ready(function() {
 		validateGitHubKey();													// Validate via GitHub
 	});
 	
-	// Listening for the click to send the API token for authentication
+	// Listening for the sendToken click to send the API token for authentication
 	$("#sendToken").on("click", function() {
 		globalGitHubKey = $("#queryTokenInput").val();							// Grab value from input
 		objKeyFS.set('githubKey', globalGitHubKey);								// Write the variable to the JSON
 		validateGitHubKey();													// Validate via GitHub						
 	});
+	
+	
+	
 	
 	// Force external links to load in default browser
 	$(document).on('click', 'a[href^="http"]', function(event) {
