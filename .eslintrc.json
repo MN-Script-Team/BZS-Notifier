@@ -1,0 +1,21 @@
+{
+    "extends": "standard",
+	"rules": {
+		"indent": ["error", "tab"],
+		"no-tabs": "off",
+		"comma-style": ["error", "first"],
+		"quotes": ["error", "double"],
+		"operator-linebreak": ["error", "before"],
+		"padded-blocks": "off",
+		"camelcase": "off",
+		"handle-callback-err": "off"
+	},
+	"globals": {
+		"shell": false
+	},
+    "env": {
+        "browser": true,
+        "node": true,
+		"jquery": true
+    }
+}
